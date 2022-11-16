@@ -1,0 +1,28 @@
+name: mysite
+recipe: drupal9
+config:
+  webroot: docroot
+  xdebug: false
+tooling:
+  blt:
+    service: appserver
+    cmd: /app/vendor/bin/blt
+    php: "8.0"
+services:
+  phpmyadmin:
+    type: phpmyadmin
+    hosts:
+      - database
+proxy:
+  phpmyadmin:
+    - phpmyadmin.mysite.lndo.site
+
+# This disables syncing of large directories that are unlikely to be edited on the host machine which should
+# significantly increase Docker's IO performance. Be sure to use Lando's `lando composer` to do composer things since
+# actions on the host machine will not be synced.
+# See http://pr-1500-v4h3hcq-iaimrn624qfk6.us.platform.sh/config/performance.html
+excludes:
+  - /app/vendor
+  - /app/docroot/modules/contrib
+  - /app/docroot/core
+  - /app/docroot/themes/contrib
